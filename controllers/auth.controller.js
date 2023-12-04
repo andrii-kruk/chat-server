@@ -42,7 +42,15 @@ const signIn = async (req, res) => {
   user.token = token;
   user.save();
 
-  res.status(200).json({token});
+  res.status(200).json({ token });
+};
+
+const signOut = async (req, res) => {
+  const { _id: id } = req.user;
+  
+  await User.findByIdAndUpdate(id, { token: "" });
+
+  res.status(204).send();
 };
 
 const verifyEmail = async (req, res) => {
@@ -62,5 +70,6 @@ const verifyEmail = async (req, res) => {
 export default {
   signUp: ctrlWrapper(signUp),
   signIn: ctrlWrapper(signIn),
+  signOut: ctrlWrapper(signOut),
   verifyEmail: ctrlWrapper(verifyEmail),
 };
