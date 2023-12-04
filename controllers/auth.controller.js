@@ -27,7 +27,23 @@ const signUp = async (req, res) => {
   res.json({ username, email, avatar, token });
 };
 
-const signIn = async (req, res) => {};
+const signIn = async (req, res) => {
+  const { email, password } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (!user) throw HttpError(409, "Email or password invalid");
+  if (!user.verify) throw HttpError(409, "Your email is not verified");
+
+  const passwordCompare = bcrypt.compare(password, user.password);
+  if (!passwordCompare) throw HttpError(409, "Email or password invalid");
+
+  const token = jwt.sign({ username: user.username, email: user.email }, JWT_SECRET, { expiresIn: "23h" });
+  user.token = token;
+  user.save();
+
+  res.status(200).json({token});
+};
 
 const verifyEmail = async (req, res) => {
   const { verificationCode } = req.params;
