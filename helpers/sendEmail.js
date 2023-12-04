@@ -18,7 +18,7 @@ const sendEmail = async (email, code) => {
   const letter = {
     to: email,
     subject: "Verify email",
-    html: `<a target="_blank" href="${API_URL}/api/users/verify/${code}">Click to verify email.</a>`,
+    html: `<a target="_blank" href="${API_URL}/auth/verify/${code}">Click to verify email.</a>`,
     from: UKR_NET_EMAIL,
   };
 
